@@ -4,12 +4,16 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 后优化LUR MAP
+ * Created by zhengxgs on 2016/4/7.
+ */
 public class ReflectionCache {
-	private static final Map<String, Class<?>> PRIMITIVE_CLASS = new HashMap<String, Class<?>>();
+	private static final Map<String, Class<?>> PRIMITIVE_CLASS = new HashMap<>();
 
-	private static final Map<String, Class<?>> CLASS_CACHE = new HashMap<String, Class<?>>(128);
+	private static final Map<String, Class<?>> CLASS_CACHE = new HashMap<>(128);
 
-	private static final Map<String, Method> METHOD_CACHE = new HashMap<String, Method>(1024);
+	private static final Map<String, Method> METHOD_CACHE = new HashMap<>(1024);
 
 	static {
 		PRIMITIVE_CLASS.put("boolean", boolean.class);
@@ -17,17 +21,19 @@ public class ReflectionCache {
 		PRIMITIVE_CLASS.put("short", short.class);
 		PRIMITIVE_CLASS.put("int", int.class);
 		PRIMITIVE_CLASS.put("long", long.class);
-		PRIMITIVE_CLASS.put("long", long.class);
 		PRIMITIVE_CLASS.put("float", float.class);
 		PRIMITIVE_CLASS.put("double", double.class);
-		PRIMITIVE_CLASS.put("void", void.class);
-
+		PRIMITIVE_CLASS.put("java.lang.Integer", Integer.class);
+		PRIMITIVE_CLASS.put("java.lang.Double", Double.class);
+		PRIMITIVE_CLASS.put("java.lang.Long", Long.class);
+		PRIMITIVE_CLASS.put("java.lang.String", String.class);
 		CLASS_CACHE.putAll(PRIMITIVE_CLASS);
 	}
 
 	public static Class<?> getClass(String className) throws ClassNotFoundException {
 		Class<?> clazz = CLASS_CACHE.get(className);
 		if (null != clazz) {
+
 			return clazz;
 		}
 		synchronized (CLASS_CACHE) {
@@ -58,7 +64,6 @@ public class ReflectionCache {
 				for (int i = 0; i < parameterClasses.length; i++) {
 					parameterClasses[i] = getClass(parameterTypes[i]);
 				}
-
 				method = clazz.getMethod(methodName, parameterClasses);
 				METHOD_CACHE.put(key, method);
 				return method;
@@ -78,5 +83,15 @@ public class ReflectionCache {
 			sb.append(seperator).append(strs[i]);
 		}
 		return sb.toString();
+	}
+
+	public static void main(String[] args) throws NoSuchMethodException, ClassNotFoundException {
+
+		// ReflectionCache.getMethod(); com.zhengxgs.rpc.service.IDemoService  sayHi
+		String className = "com.zhengxgs.rpc.service.IDemoService";
+		String method = "sayHi";
+		String[] parmsType = new String[0];
+		ReflectionCache.getMethod(className, method, parmsType);
+
 	}
 }

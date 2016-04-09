@@ -4,6 +4,7 @@ import com.zhengxgs.rpc.client.GodRpcClient;
 import com.zhengxgs.rpc.client.RpcClient;
 import com.zhengxgs.rpc.conn.BIORpcConnection;
 import com.zhengxgs.rpc.conn.RpcConnection;
+import com.zhengxgs.rpc.service.ICommunityInfoService;
 import com.zhengxgs.rpc.service.IDemoService;
 
 /**
@@ -17,7 +18,11 @@ public class StartClient {
 		RpcClient rpcClient = new GodRpcClient(rpcConnection);
 
 		IDemoService demoService = rpcClient.proxy(IDemoService.class);
-        System.out.println(demoService.sayHi());
-        rpcConnection.close();
+        // System.out.println(demoService.sayHi());
+
+		ICommunityInfoService communityInfoService = rpcClient.proxy(ICommunityInfoService.class);
+		communityInfoService.queryCommunityInfo(10000);
+
+		rpcConnection.close();
 	}
 }

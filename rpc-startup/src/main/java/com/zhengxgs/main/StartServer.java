@@ -2,7 +2,9 @@ package com.zhengxgs.main;
 
 import com.zhengxgs.rpc.server.BIORpcServer;
 import com.zhengxgs.rpc.server.RpcServer;
+import com.zhengxgs.rpc.service.ICommunityInfoService;
 import com.zhengxgs.rpc.service.IDemoService;
+import com.zhengxgs.rpc.service.impl.CommunityInfoServiceImpl;
 import com.zhengxgs.rpc.service.impl.DemoServiceImpl;
 
 /**
@@ -13,8 +15,9 @@ public class StartServer {
 	public static void main(String[] args) {
 
 		// service....
-		IDemoService demo = new DemoServiceImpl();
-		RpcServer rpcServer = new BIORpcServer(8000, new Object[] { demo });
-        rpcServer.start();
-    }
+		IDemoService demoService = new DemoServiceImpl();
+		ICommunityInfoService communityInfoService = new CommunityInfoServiceImpl();
+		RpcServer rpcServer = new BIORpcServer(8000, new Object[] { demoService, communityInfoService });
+		rpcServer.start();
+	}
 }

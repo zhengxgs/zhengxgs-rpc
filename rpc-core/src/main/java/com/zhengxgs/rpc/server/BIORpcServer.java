@@ -72,8 +72,11 @@ public class BIORpcServer implements RpcServer {
 			Method method = ReflectionCache.getMethod(request.getClassName(), request.getMethodName(), request.getParameterTypes());
 			Object[] parameters = request.getParameters();
 			Object handler = handlers.get(request.getClassName());
-			Object result = method.invoke(handler, parameters);
-			return result;
+			if (handler != null) {
+				Object result = method.invoke(handler, parameters);
+				return result;
+			}
+			throw new RuntimeException("no provider");
 		}
 
 		public void run() {
