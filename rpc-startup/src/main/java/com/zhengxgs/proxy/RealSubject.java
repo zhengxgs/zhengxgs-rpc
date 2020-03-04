@@ -7,7 +7,6 @@ public class RealSubject implements Subject {
 
 	public String doSomething(String aaa, Integer bbb, int ccc) {
 		System.out.println("call doSomething()");
-		System.out.println("test");
 		return "123";
 
 	}
